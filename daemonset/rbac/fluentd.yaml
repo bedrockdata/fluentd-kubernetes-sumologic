@@ -1554,3 +1554,22 @@ data:
       exclude_priority_regex "#{ENV['EXCLUDE_PRIORITY_REGEX']}"
       exclude_unit_regex "#{ENV['EXCLUDE_UNIT_REGEX']}"
     </filter>
+
+  fathom.logger: |-
+    <match **>
+      @type http
+
+      endpoint http://fathom-logger-express:4404/log
+      open_timeout 2
+
+      <format>
+        @type json
+      </format>
+      <buffer>
+        flush_interval 10s
+      </buffer>
+    </match>      
+
+
+
+    
