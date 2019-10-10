@@ -3,7 +3,7 @@ FROM fluent/fluentd:v1.3.2-debian AS builder
 
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 
-COPY ./fluent-plugin-kubernetes_sumologic*.gem ./
+#COPY ./fluent-plugin-kubernetes_sumologic*.gem ./
 
 # New fluent image dynamically creates user in entrypoint
 RUN [ -f /bin/entrypoint.sh ] && /bin/entrypoint.sh echo || : && \
