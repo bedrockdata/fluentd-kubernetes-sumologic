@@ -1,0 +1,58 @@
+node('jenkins-build-agent') {
+    def bedrock_sync_container
+    def clusterName = 'arn:aws:eks:us-east-1:671125322978:cluster/QA-EKS'
+    def contextName = 'arn:aws:eks:us-east-1:671125322978:cluster/QA-EKS'
+    def serverUrl = 'https://CDCCF6AF4C9EE4C3CA066B4B199DD763.gr7.us-east-1.eks.amazonaws.com'    
+
+    stage('Checkout') {
+        git branch: 'qa', credentialsId: 'jenkins-github-password-credentials', url: 'https://github.com/bedrockdata/fluentd-kubernetes-sumologic'
+    }
+
+    stage('Build Docker images') {
+        sh 'cp deploy/Dockerfile ./Dockerfile'
+
+        docker.withRegistry('https://671125322978.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-ecr-credentials') {
+            bedrock_sync_container = docker.build('671125322978.dkr.ecr.us-east-1.amazonaws.com/qa/fluentd-kubernetes-sumologic')
+        }
+
+        sh 'rm ./Dockerfile'
+    } 
+
+    stage('Push images') {
+        docker.withRegistry('https://671125322978.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-ecr-credentials') {
+            bedrock_sync_container.push("${env.BUILD_NUMBER}")
+            bedrock_sync_container.push("latest")
+        }
+    }
+
+    // stage('Build dependencies') {
+    //     configFileProvider([configFile(fileId: 'qa-sync-settings', variable: 'SYNC_SETTINGS')]) {
+    //         sh "cp '$SYNC_SETTINGS' '${pwd}/settings.py'"
+    //         withKubeConfig(clusterName: clusterName, contextName: contextName, credentialsId: 'jenkins-deployer-credentials', namespace: 'default', serverUrl: serverUrl) {
+    //             sh "kubectl create secret generic v2-sync-settings --from-file='${pwd}/settings.py' --dry-run -o yaml | kubectl apply -f -"
+    //         }
+    //     }                       
+    // }    
+
+
+    stage('Deploy fluentd-kubernetes-sumologic to k8 cluster') {
+        // sh 'cp deploy/qa/deployment.yaml ./deployment.yaml'
+        // sh 'cp deploy/qa/service.yaml ./service.yaml'
+        sh 'cp daemonset/rbac/fluentd.yaml ./fluentd.yaml'
+
+        withKubeConfig(clusterName: clusterName, contextName: contextName, credentialsId: 'jenkins-deployer-credentials', namespace: 'default', serverUrl: serverUrl) {
+            sh 'kubectl apply -f ./fluentd.yaml --record'
+            // sh 'kubectl patch deployment fluentd-kubernetes-sumologic -p "{\\"spec\\":{\\"template\\":{\\"metadata\\":{\\"labels\\":{\\"date\\": \\"$(date +%s)\\"}}}}}"'    
+            // sh 'kubectl apply -f ./deployment.yaml --record'
+            // sh 'kubectl get deployments'
+            // sh 'kubectl apply -f ./service.yaml --record'
+            // sh 'kubectl get services -o wide'
+            sh 'kubectl get pods'
+        }         
+    }    
+
+
+    stage('Cleanup') {
+        sh "docker rmi -f ${bedrock_sync_container.imageName()}:${env.BUILD_NUMBER}"
+    }
+}

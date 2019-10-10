@@ -1555,21 +1555,29 @@ data:
       exclude_unit_regex "#{ENV['EXCLUDE_UNIT_REGEX']}"
     </filter>
 
-  fathom.logger: |-
-    <match **>
-      @type http
+  file.source.fathom-logger.conf: |-
+    <source>
+      @type forward
+      tag fathom.logger
+      format json
+      source_host bedrock-sync  
+      port 8801
+      bind 0.0.0.0
+    </source>
+        
+    # <match **>
+    #   @type http
 
-      endpoint http://fathom-logger-express:4404/log
-      open_timeout 2
+    #   endpoint http://fathom-logger-express:4404/log
+    #   open_timeout 2
 
-      <format>
-        @type json
-      </format>
-      <buffer>
-        flush_interval 10s
-      </buffer>
-    </match>      
+    #   <format>
+    #     @type json
+    #   </format>
+    #   <buffer>
+    #     flush_interval 10s
+    #   </buffer>
+    # </match>      
 
 
 
-    
