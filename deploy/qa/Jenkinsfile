@@ -9,13 +9,13 @@ node('jenkins-build-agent') {
     }
 
     stage('Build Docker images') {
-        sh 'cp Dockerfile ./Dockerfile'
+        // sh 'cp Dockerfile ./Dockerfile'
 
         docker.withRegistry('https://671125322978.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-ecr-credentials') {
             bedrock_sync_container = docker.build('671125322978.dkr.ecr.us-east-1.amazonaws.com/qa/fluentd-kubernetes-sumologic')
         }
 
-        sh 'rm ./Dockerfile'
+        // sh 'rm ./Dockerfile'
     } 
 
     stage('Push images') {
