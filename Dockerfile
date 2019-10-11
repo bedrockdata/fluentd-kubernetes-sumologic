@@ -62,8 +62,8 @@ ENV VERIFY_SSL "true"
 
 COPY --from=builder /var/lib/gems /var/lib/gems
 
-COPY ./conf.d/ /fluentd/conf.d/
-COPY ./etc/* /fluentd/etc/
+#COPY ./conf.d/ /fluentd/conf.d/
+#COPY ./etc/* /fluentd/etc/
 COPY ./lib/fluent/plugin/* /fluentd/plugins/
 COPY ./entrypoint.sh /fluentd/
 
