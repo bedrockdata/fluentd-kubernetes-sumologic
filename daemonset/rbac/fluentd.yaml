@@ -33,7 +33,7 @@ subjects:
 - kind: ServiceAccount
   name: fluentd
   # This namespace setting will limit fluentd to watching/listing/getting pods in the default namespace. If you want it to be able to log your kube-system namespace as well, comment the line out.
-  namespace: default
+  # namespace: default
 
 --- 
 apiVersion: extensions/v1beta1
