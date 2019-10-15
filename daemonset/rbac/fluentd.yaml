@@ -36,7 +36,8 @@
 #   # namespace: default
 
 --- 
-apiVersion: extensions/v1beta1
+# apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-sumologic
@@ -44,6 +45,13 @@ metadata:
     app: fluentd-sumologic
     version: v1
 spec:
+  selector:
+    matchLabels:
+      service: fluentd-sumologic  
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   template:
     metadata:
       labels:
