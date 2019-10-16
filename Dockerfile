@@ -25,6 +25,8 @@ RUN [ -f /bin/entrypoint.sh ] && /bin/entrypoint.sh echo || : && \
 #FROM fluent/fluentd:v1.3.2-debian
 FROM fluent/fluentd:v1.7.3-debian-1.0
 
+USER root
+
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.4.4/bin:$PATH
 
