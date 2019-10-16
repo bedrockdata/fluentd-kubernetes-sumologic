@@ -1576,19 +1576,19 @@ data:
       bind 0.0.0.0
     </source>
         
-    # <match **>
-    #   @type http
+    <match **>
+      @type http
 
-    #   endpoint http://fathom-logger-express:4404/log
-    #   open_timeout 2
+      endpoint http://fathom-logger-express:4404/log
+      open_timeout 2
 
-    #   <format>
-    #     @type json
-    #   </format>
-    #   <buffer>
-    #     flush_interval 10s
-    #   </buffer>
-    # </match>      
+      <format>
+        @type json
+      </format>
+      <buffer>
+        flush_interval 10s
+      </buffer>
+    </match>      
 
 
 
