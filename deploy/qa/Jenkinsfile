@@ -42,7 +42,7 @@ node('jenkins-build-agent') {
 
         withKubeConfig(clusterName: clusterName, contextName: contextName, credentialsId: 'jenkins-deployer-credentials', namespace: 'default', serverUrl: serverUrl) {
             // delete the daemonset
-            sh 'kubectl delete fluentd-sumologic'
+            sh 'kubectl delete daemonset fluentd-sumologic'
             sh 'kubectl apply -f ./fluentd.yaml --record'
             // sh 'kubectl patch daemonset fluentd-sumologic -p "{\\"spec\\":{\\"template\\":{\\"metadata\\":{\\"labels\\":{\\"date\\": \\"$(date +%s)\\"}}}}}"'    
             // sh 'kubectl apply -f ./fluentd.yaml --record'
