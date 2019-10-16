@@ -1,5 +1,5 @@
-#FROM fluent/fluentd:v1.3.2-debian AS builder
-FROM fluent/fluentd:v1.7.3-debian-1.0 AS builder
+FROM fluent/fluentd:v1.3.2-debian AS builder
+#FROM fluent/fluentd:v1.7.3-debian-1.0 AS builder
 
 ENV PATH /home/fluent/.gem/ruby/2.4.4/bin:$PATH
 
@@ -17,11 +17,12 @@ RUN [ -f /bin/entrypoint.sh ] && /bin/entrypoint.sh echo || : && \
     gem install fluent-plugin-prometheus -v 1.1.0 && \
     rm -rf /home/fluent/.gem/ruby/2.4.4/cache/*.gem && \
     gem sources -c && \
-    apt-get remove --purge -y build-essential ruby-dev libffi-dev libsystemd-dev && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get remove --purge -y build-essential ruby-dev libffi-dev libsystemd-dev
+    #apt-get remove --purge -y build-essential ruby-dev libffi-dev libsystemd-dev && \
+    #rm -rf /var/lib/apt/lists/*
 
-#FROM fluent/fluentd:v1.3.2-debian
-FROM fluent/fluentd:v1.7.3-debian-1.0
+FROM fluent/fluentd:v1.3.2-debian
+#FROM fluent/fluentd:v1.7.3-debian-1.0
 
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.4.4/bin:$PATH
