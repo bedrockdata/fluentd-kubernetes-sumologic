@@ -1,5 +1,5 @@
 #FROM fluent/fluentd:v1.3.2-debian AS builder
-FROM fluent/fluentd:v1.7.0-debian AS builder
+FROM fluent/fluentd:v1.7.3-debian AS builder
 
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 
@@ -24,7 +24,7 @@ RUN [ -f /bin/entrypoint.sh ] && /bin/entrypoint.sh echo || : && \
     rm -rf /var/lib/apt/lists/*
 
 #FROM fluent/fluentd:v1.3.2-debian
-FROM fluent/fluentd:v1.7.0-debian
+FROM fluent/fluentd:v1.7.3-debian
 
 WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
