@@ -33,10 +33,11 @@ subjects:
 - kind: ServiceAccount
   name: fluentd
   # This namespace setting will limit fluentd to watching/listing/getting pods in the default namespace. If you want it to be able to log your kube-system namespace as well, comment the line out.
-  namespace: default
+  # namespace: default
 
 --- 
 apiVersion: extensions/v1beta1
+# apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-sumologic
@@ -44,10 +45,20 @@ metadata:
     app: fluentd-sumologic
     version: v1
 spec:
+  # selector:
+  #   matchLabels:
+  #     service: fluentd-sumologic  
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   template:
     metadata:
       labels:
         name: fluentd-sumologic
+    # metadata:
+    #   labels:
+    #     service: fluentd-sumologic
     spec:
       serviceAccountName: fluentd
       volumes:
@@ -66,6 +77,7 @@ spec:
           name: fluentd-sumologic-config
       containers:
       - image: sumologic/fluentd-kubernetes-sumologic:v2.4.2
+      # - image: 671125322978.dkr.ecr.us-east-1.amazonaws.com/qa/fluentd-kubernetes-sumologic:latest
         name: fluentd
         imagePullPolicy: IfNotPresent
         volumeMounts:
@@ -88,10 +100,6 @@ spec:
             secretKeyRef:
               name: sumologic
               key: collector-url
-        - name: SOURCE_CATEGORY_PREFIX
-          value: "bedrockdata/prod/kubernetes/"
-        - name: SOURCE_CATEGORY_REPLACE_DASH
-          value: "_"                         
         # Improve GC for memory limited envs like docker.
         - name: RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR
           value: "0.9"
@@ -1558,3 +1566,30 @@ data:
       exclude_priority_regex "#{ENV['EXCLUDE_PRIORITY_REGEX']}"
       exclude_unit_regex "#{ENV['EXCLUDE_UNIT_REGEX']}"
     </filter>
+
+  # file.source.fathom-logger.conf: |-
+    # <source>
+    #   @type forward
+    #   tag fathom.logger
+    #   format json
+    #   source_host bedrock-sync  
+    #   port 8801
+    #   bind 0.0.0.0
+    # </source>
+        
+    # <match **>
+    #   @type http
+
+    #   endpoint http://fathom-logger-express:4404/log
+    #   open_timeout 2
+
+    #   <format>
+    #     @type json
+    #   </format>
+    #   <buffer>
+    #     flush_interval 10s
+    #   </buffer>
+    # </match>      
+
+
+
