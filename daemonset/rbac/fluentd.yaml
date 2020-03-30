@@ -97,6 +97,8 @@ spec:
           value: "0.9"
         - name: EXCLUDE_POD_REGEX
           value: (bedrock-api|connector-proxy)
+        - name: MULTILINE_START_REGEXP
+          value: \d\s
       tolerations:
           #- operator: "Exists"
           - effect: "NoSchedule"
