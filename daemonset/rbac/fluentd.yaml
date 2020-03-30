@@ -98,7 +98,11 @@ spec:
         - name: EXCLUDE_POD_REGEX
           value: (bedrock-api|connector-proxy)
         - name: MULTILINE_START_REGEXP
-          value: \d\s
+          value: /^3\s/
+        - name: MULTILINE_END_REGEXP
+          value: /END STACKTRACE/
+        - name: CONCAT_SEPARATOR
+          value: \n
       tolerations:
           #- operator: "Exists"
           - effect: "NoSchedule"
@@ -195,6 +199,7 @@ data:
       @type concat
       key log
       multiline_start_regexp "#{ENV['MULTILINE_START_REGEXP']}"
+      multiline_end_regexp "#{ENV['MULTILINE_END_REGEXP']}"
       separator "#{ENV['CONCAT_SEPARATOR']}"
       timeout_label @NORMAL
     </filter>
