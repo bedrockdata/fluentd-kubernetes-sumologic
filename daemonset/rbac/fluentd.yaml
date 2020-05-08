@@ -96,13 +96,15 @@ spec:
         - name: RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR
           value: "0.9"
         - name: EXCLUDE_POD_REGEX
-          value: (bedrock-api|connector-proxy)
+          value: (bedrock-api|connector-proxy|fathom-logger-express|nginx-ingress|datadog-cluster-agent)
         - name: MULTILINE_START_REGEXP
           value: /START STACKTRACE/
         - name: MULTILINE_END_REGEXP
           value: /END STACKTRACE/
-        - name: CONCAT_SEPARATOR
-          value: \n
+        - name: KUBERNETES_META
+          value: "false"
+        # - name: CONCAT_SEPARATOR
+        #   value: \n
       tolerations:
           #- operator: "Exists"
           - effect: "NoSchedule"
